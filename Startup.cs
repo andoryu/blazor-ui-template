@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using andoryu.TravellingSalesman;
+
 namespace blazor_template
 {
     public class Startup
@@ -26,6 +28,8 @@ namespace blazor_template
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddSingleton<BlazorFacade>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -42,3 +42,14 @@ a.button {
 .blue:hover {
     background-color:#2b67ac80;
 }
+
+label {
+    color: #ffffffB0;
+}
+
+input.control {
+    width: 100%;
+
+    background-color: #ffffffc0;
+    margin-bottom: 0.8em;
+}

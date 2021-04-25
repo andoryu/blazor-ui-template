@@ -1,10 +1,25 @@
-﻿<div class="logs">
-    @foreach (var line in lines)
+﻿@implements IDisposable;
+@inject BlazorFacade facade
+@using andoryu.TravellingSalesman
+
+<div class="logs">
+    @foreach (var line in facade.logs)
     {
         @line<br/>
     }
 </div>
 
 @code {
-    List<string> lines = new();
+    protected override void OnInitialized()
+    {
+        facade.LogChange += OnLogChange;
+    }
+
+    protected void OnLogChange(object sender, EventArgs e) => StateHasChanged(); 
+    
+
+    void IDisposable.Dispose()
+    {
+        facade.LogChange -= OnLogChange;
+    }
 }

@@ -1,24 +1,72 @@
-﻿@using Excubo.Blazor.Canvas
+﻿@implements IDisposable;
+@inject BlazorFacade facade
+
+@using System.Linq;
+
+@using Excubo.Blazor.Canvas
+@using Excubo.Blazor.Canvas.Contexts
+@using andoryu.TravellingSalesman
+
 
 <div class="canvas_container">
-    <Canvas @ref="drawing_canvas" width="1024px" height="768px" />
+    <Canvas @ref="drawing_canvas" width="1920px" height="1080px" />
 </div>
 
 @code {
     private Canvas drawing_canvas;
+    private Context2D context;
+
+    protected override void OnInitialized()
+    {
+        facade.CitiesChange += OnCitiesChange;
+    }
+
+    private async void OnCitiesChange(object sender, EventArgs e)
+    {
+        StateHasChanged(); 
+    }
+    
+
+    void IDisposable.Dispose()
+    {
+        facade.CitiesChange -= OnCitiesChange;
+    }
+
+
     protected override async Task OnAfterRenderAsync(bool first_render)
     {
-        if (true)
+        if (first_render)
         {
-            await using (var ctx = await drawing_canvas.GetContext2DAsync())
+            context = await drawing_canvas.GetContext2DAsync();
+        }
+        else
+        {
+            await DrawCirclesAsync(facade.city_list, 5);
+        }
+    }
+
+    private async Task DrawCirclesAsync(List<Point>centres, int radius=5)
+    {
+        await using (var batch = await context.CreateBatchAsync())
+        {
+            await batch.FillStyleAsync("black");
+            await batch.FillRectAsync(0, 0, 1920, 1080);
+
+            //display the starting point in green
+            await batch.FillStyleAsync("green");
+
+            var _centre = centres.First();
+            await batch.BeginPathAsync();
+            await batch.ArcAsync(_centre.x, _centre.y, radius, 0, 2 * Math.PI);
+            await batch.FillAsync(FillRule.EvenOdd);            
+
+            //display the rest in white
+            await batch.FillStyleAsync("white");
+            foreach (var centre in centres.Skip(1))
             {
-
-                await ctx.LineStyles.LineWidthAsync(5);
-                await ctx.FillAndStrokeStyles.StrokeStyleAsync("#ff0000");
-
-                await ctx.MoveToAsync(0, 0);
-                await ctx.LineToAsync(1024, 768);
-                await ctx.StrokeAsync();
+                await batch.BeginPathAsync();
+                await batch.ArcAsync(centre.x, centre.y, radius, 0, 2 * Math.PI);
+                await batch.FillAsync(FillRule.EvenOdd);
             }
         }
     }

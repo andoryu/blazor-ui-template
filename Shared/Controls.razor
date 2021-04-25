@@ -1,7 +1,19 @@
-﻿<a href="#" class="button green">Start</a>
-<a href="#" class="button blue">Restart</a>
-<a href="#" class="button red">Stop</a>
+﻿@inject BlazorFacade facade
+@using andoryu.TravellingSalesman
+
+<label for="cities">Num cities:</label>
+<input id="cities" type="number" class="control" @bind="cities" min="0" max="100">
+
+<a href="#" class="button blue" @onclick="GenerateCities">Generate</a>
+<a href="#" class="button green">Brute Force</a>
+
 
 @code {
 
+    private int cities = 15;
+
+    private void GenerateCities()
+    {
+        facade.GenerateCities(cities);
+    }
 }

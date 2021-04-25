@@ -1,0 +1,44 @@
+a.button {
+    text-decoration:none;
+
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 3px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+    margin: 1px;
+
+    padding: 0.25em 0.75em;
+    min-width: 10ch;
+    min-height: 44px;
+
+    font-size: 0.85em;
+    text-align: center;
+    line-height: 1.1;
+    color: #ffffff;
+
+    transition: 220ms all ease-in-out;
+}
+
+.green {
+    background-color:#4da32280;
+}
+.green:hover {
+    background-color:#38791880;
+}
+
+.red {
+    background-color:#db2d2d80;
+}
+.red:hover {
+    background-color:#921d1d80;
+}
+
+.blue {
+    background-color:#3b8ae680;
+}
+.blue:hover {
+    background-color:#2b67ac80;
+}

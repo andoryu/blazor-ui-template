@@ -1,0 +1,25 @@
+﻿@using Excubo.Blazor.Canvas
+
+<div class="canvas_container">
+    <Canvas @ref="drawing_canvas" width="1024px" height="768px" />
+</div>
+
+@code {
+    private Canvas drawing_canvas;
+    protected override async Task OnAfterRenderAsync(bool first_render)
+    {
+        if (true)
+        {
+            await using (var ctx = await drawing_canvas.GetContext2DAsync())
+            {
+
+                await ctx.LineStyles.LineWidthAsync(5);
+                await ctx.FillAndStrokeStyles.StrokeStyleAsync("#ff0000");
+
+                await ctx.MoveToAsync(0, 0);
+                await ctx.LineToAsync(1024, 768);
+                await ctx.StrokeAsync();
+            }
+        }
+    }
+}

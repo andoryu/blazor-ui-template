@@ -1,0 +1,32 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="controls">
+        <Controls />
+    </div>
+    
+    <div class="@LogClass">
+        <button @onclick="ToggleCollapse">T</button>
+        <Log />
+    </div>
+
+    <div class="main">
+        @Body
+    </div>
+
+</div>
+
+@code {
+    private bool LogVisible = true;
+    private string LogClass = "log";
+
+    private void ToggleCollapse() {
+        if(LogVisible == true) {
+            LogClass = "log hidden";
+        } else {
+            LogClass = "log";
+        }
+        LogVisible = !LogVisible;
+    }
+
+}

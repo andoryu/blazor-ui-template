@@ -21,7 +21,7 @@
         facade.CitiesChange += OnCitiesChange;
     }
 
-    private async void OnCitiesChange(object sender, EventArgs e)
+    private void OnCitiesChange(object sender, EventArgs e)
     {
         StateHasChanged(); 
     }
@@ -41,11 +41,51 @@
         }
         else
         {
-            await DrawCirclesAsync(facade.city_list, 5);
+            //await DrawCirclesAsync(facade.GetCities(), 5);
+            var draw_list = facade.GetDisplayList();
+
+            //batch all the jobs
+            await using var batch = await context.CreateBatchAsync();
+
+            //clear the canvas
+            await batch.FillStyleAsync("black");
+            await batch.FillRectAsync(0, 0, 1920, 1080);
+
+            foreach(var item in draw_list)
+            {
+                if (item is Circle)
+                {
+                    await BatchCircleAsync(batch, item as Circle);
+                }
+                else if (item is Line)
+                {
+                    await BatchLineAsync(batch, item as Line);
+                }
+            }
+
         }
     }
 
-    private async Task DrawCirclesAsync(List<Point>centres, int radius=5)
+    protected async Task BatchCircleAsync(Batch2D batch, Circle circle)
+    {
+        await batch.FillStyleAsync(circle.colour);
+        await batch.BeginPathAsync();
+        await batch.ArcAsync(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
+        await batch.FillAsync(FillRule.EvenOdd);            
+    }
+    protected async Task BatchLineAsync(Batch2D batch, Line line)
+    {
+        await batch.StrokeStyleAsync(line.colour);
+        await batch.BeginPathAsync();
+        await batch.LineWidthAsync(line.width);
+        await batch.MoveToAsync(line.x1, line.y1);
+        await batch.LineToAsync(line.x2, line.y2);
+        await batch.StrokeAsync();
+    }
+
+
+
+    private async Task DrawCirclesAsync(List<City>centres, int radius=5)
     {
         await using (var batch = await context.CreateBatchAsync())
         {

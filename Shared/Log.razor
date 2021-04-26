@@ -3,7 +3,7 @@
 @using andoryu.TravellingSalesman
 
 <div class="logs">
-    @foreach (var line in facade.logs)
+    @foreach (var line in facade.GetLogs())
     {
         @line<br/>
     }
